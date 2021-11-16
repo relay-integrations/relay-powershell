@@ -1,0 +1,29 @@
+# Step metadata example - full description at:
+# https://github.com/puppetlabs/relay-rfcs/blob/master/content/0006-integration-layout/rfc.md#common-metadata
+apiVersion: integration/v1
+kind: Step
+name: powershell-step-run
+version: 1
+summary: Run PowerShell script
+description: |
+  Relay step for running a PowerShell script (inline or from a URL).
+
+build:
+  apiVersion: build/v1
+  kind: Docker
+
+publish:
+  repository: relaysh/powershell-step-run
+
+schemas:
+  spec:
+    $schema: http://json-schema.org/draft-07/schema#
+    type: object
+    properties:
+      script:
+        type: string
+        description: The contents of the PowerShell script to run.
+      script_url:
+        type: string
+        description: The URL of the PowerShell script to run.
+    additionalProperties: false
