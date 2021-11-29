@@ -36,10 +36,13 @@ RUN ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
 # Setup PowerShell profile
 COPY profile.ps1 /opt/microsoft/powershell/7/profile.ps1
 
+SHELL ["pwsh", "-Command"]
+
+# Install commonly-used PowerShell modules
+RUN Install-Module -Name Az -Force
+
 # Copy the step file
 COPY step.ps1 /scripts/step.ps1
-
-SHELL ["pwsh", "-Command"]
 
 CMD ["pwsh", "-Command", "/scripts/step.ps1"]
 
