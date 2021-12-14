@@ -54,5 +54,5 @@ if($null -eq $GitRepo) {
 }
 
 $RepoPath = "$WorkDir/repo"
-Relay-Interface git clone -d "$WorkDir/repo" -r $GitBranch
+Relay-Interface git clone -d $RepoPath -r $GitBranch
 RunScript("$RepoPath/default/$GitScriptPath")
