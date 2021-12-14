@@ -6,38 +6,40 @@ $GitRepo = (Relay-Interface get -p '{.git.repository}')
 $GitScriptPath = (Relay-Interface get -p '{.git.scriptPath}')
 
 $GitBranch = (Relay-Interface get -p '{.git.revision}')
-if ($GitBranch -eq $null) { $GitBranch = "main" }
+if ($null -eq $GitBranch) { $GitBranch = "main" }
 
 $WorkDir = $env:WORKDIR
-if ($WorkDir -eq $null) { $WorkDir = "/workspace" }
+if ($null -eq $WorkDir) { $WorkDir = "/workspace" }
+New-Item $WorkDir -Force -ItemType Directory | Out-Null
 
+$ScriptName = "script.ps1"
+$ScriptPath = "$WorkDir/$ScriptName"
 function RunScript {
     param ( 
         [string]$ScriptPath
     )
     Invoke-Expression -Command $ScriptPath 
     exit $LASTEXITCODE
-
 }
 
-if ($Script -eq $null -and $ScriptUrl -eq $null -and $GitScriptPath -eq $null) {
+if ($null -eq $Script -and $null -eq $ScriptUrl -and $null -eq $GitScriptPath) {
     Write-Host "No script, scriptUrl or git.scriptPath was specified."
     exit 1
 }
 
-if ($Script -ne $null -and $Script -ne "") {
-    New-Item -Name "script.ps1" -Type File | Out-Null
+if ($null -ne $Script -and "" -ne $Script) {
+    New-Item -Path $ScriptPath -Type File | Out-Null
     foreach ($line in $Script) {
-        Add-Content script.ps1 $line
+        Add-Content $ScriptPath $line
     }
-    RunScript("script.ps1")
+    RunScript($ScriptPath)
 }
 
-if($ScriptUrl -ne $null -and $ScriptUrl -ne "") {
+if ($null -ne $ScriptUrl -and "" -ne $ScriptUrl) {
     try
     {
-        Invoke-WebRequest -Uri $ScriptUrl -OutFile script.ps1
-        RunScript("script.ps1")
+        Invoke-WebRequest -Uri $ScriptUrl -OutFile $ScriptPath
+        RunScript($ScriptPath)
     }
     catch
     {
@@ -46,13 +48,11 @@ if($ScriptUrl -ne $null -and $ScriptUrl -ne "") {
     }
 } 
 
-
-if($GitRepo -eq $null) {
+if($null -eq $GitRepo) {
     Write-Host "Need to also specify git.repository if git.scriptPath is specified"
     exit 1
 }
 
-New-Item $WorkDir -Force -ItemType Directory
 $RepoPath = "$WorkDir/repo"
 Relay-Interface git clone -d "$WorkDir/repo" -r $GitBranch
 RunScript("$RepoPath/default/$GitScriptPath")
