@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "script": {
+      "type": "string",
+      "description": "The contents of the PowerShell script to run"
+    },
+    "scriptUrl": {
+      "type": "string",
+      "description": "The URL of the PowerShell script to run"
+    },
+    "git": {
+      "type": "object",
+      "properties": {
+        "connection": {
+          "type": "object",
+          "x-relay-connectionType": "ssh",
+          "properties": {
+            "sshKey": {
+              "type": "string",
+              "description": "the private ssh key for the git ssh connection"
+            }
+          },
+          "repository": {
+            "type": "string",
+            "description": "git repository URL to fetch the PowerShell script from"
+          },
+          "branch": {
+            "type": "string",
+            "description": "Branch of the repository to clone"
+          },
+          "scriptPath": {
+            "type": "string",
+            "description": "The relative path of the PowerShell script in the repository"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}
