@@ -55,4 +55,7 @@ if($null -eq $GitRepo) {
 
 $RepoPath = "$WorkDir/repo"
 Relay-Interface git clone -d $RepoPath -r $GitBranch
+if ($LASTEXITCODE -ne 0) {
+    throw "Could not clone $GitRepo"
+}
 RunScript("$RepoPath/default/$GitScriptPath")
