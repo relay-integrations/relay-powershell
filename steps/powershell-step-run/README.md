@@ -9,11 +9,20 @@ This step expects the following fields in the `spec` section of a workflow step 
 | Setting      | Data type | Description                             | Default | Required |
 | ------------ | --------- | --------------------------------------- | ------- | -------- |
 | `script`     | String    | Inline PowerShell script                |         | \*       |
-| `script_url` | String    | The URL of the PowerShell script to run |         | \*       |
+| `scriptUrl`  | String    | The URL of the PowerShell script to run |         | \*       |
+| `git`        | Object    | settings for the git connection to getch the Powershell script from |         | \*       |
+| `git.connection`        | Connection    | SSH connection for git repository access. The repository should have a corresponding deploy key. |         | No  |
+| `git.repository`        | String    | An URL pointing to a git repository. This can be either an SSH or a HTTPS URL. If an SSH URL is given, the `git.connection` parameter is required.|         | \**  |
+| `git.branch`        | String    | The branch of the git repository to clone. If no branch is specified, the default branch is cloned.|         | No  |
+| `git.scriptPath`        | String    | The path to the script relative to the root of the git repository. Since the whole repository is cloned, the script has access to all files inside the git repository while running. |         | \*  |
 
-*\*Note: Either `script` or `script_url` should be specified.*
+\* Either `script`, `scriptUrl` or `git.scriptPath` should be specified.
+
+\*\* If the `git` parameter is specified, the `git.repository` is required.
 
 ## Usage
+
+### Inline script
 
 ```yaml
 step:
@@ -25,14 +34,41 @@ step:
       Write-Host "Hello Puppet!"
 ```
 
-or
+### Script from an URL
 
 ```yaml
 step:
   name: my-powershell-step
   image: relaysh/powershell-step-run
   spec:
-    script_url: "https://example.com/myscript.ps1"
+    scriptUrl: https://example.com/myscript.ps1
+```
+
+### Script from a public git repo
+
+```yaml
+step:
+  name: my-powershell-step
+  image: relaysh/powershell-step-run
+  spec:
+    git:
+      repository: https://github.com/someuser/somerepo
+      branch: main
+      scriptPath: powershell/sample.ps1
+```
+
+### Script from a private git repo
+
+```yaml
+step:
+  name: my-powershell-step
+  image: relaysh/powershell-step-run
+  spec:
+    git:
+      connection: ${connections.ssh.'my-ssh-connection'}
+      repository: git@github.com:someuser/somerepo
+      branch: main
+      scriptPath: powershell/sample.ps1
 ```
 
 ### Notes
