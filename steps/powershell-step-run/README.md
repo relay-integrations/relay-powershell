@@ -1,4 +1,4 @@
-# powershell
+# powershell-step-run
 
 This step runs a PowerShell script using the latest version of PowerShell (7.2).
 
