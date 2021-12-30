@@ -6,7 +6,7 @@ This integration allows you to run PowerShell scripts within Relay.
 
 | Name             | Description                                                            |
 | ---------------- | ---------------------------------------------------------------------- |
-| [run](steps/run) | Runs a PowerShell script using the latest version of PowerShell (7.2). |
+| [run](/steps/run) | Runs a PowerShell script using the latest version of PowerShell (7.2). |
 
 ## Contributing
 
