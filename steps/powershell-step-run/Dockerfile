@@ -39,7 +39,7 @@ COPY profile.ps1 /opt/microsoft/powershell/7/profile.ps1
 SHELL ["pwsh", "-Command"]
 
 # Install commonly-used PowerShell modules
-RUN Install-Module -Name Az -Force -Scope AllUsers
+RUN Install-Module -Name Az -RequiredVersion 7.1.0 -Force -Scope AllUsers
 
 # Copy the step file
 COPY step.ps1 /scripts/step.ps1
